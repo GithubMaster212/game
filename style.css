@@ -1,0 +1,26 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#gameSelect {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#gameInfo {
+    text-align: center;
+}
+
+#gameCover {
+    max-width: 300px;
+    margin: 20px 0;
+}
