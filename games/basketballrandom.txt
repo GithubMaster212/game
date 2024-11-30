@@ -1,4 +1,4 @@
 Basketball Random
-Description
+a 1-2 player physics-based basketball game
 https://images.crazygames.com/basket-random_16x9/20240617090207/basket-random_16x9-cover?auto=format%2Ccompress&q=45&cs=strip&ch=DPR&w=1200&h=630&fit=crop
 https://hhsbest.github.io/bkrndom/
