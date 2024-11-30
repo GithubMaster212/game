@@ -3,34 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Selection</title>
+    <title>Unblocked Games</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+        }
+        .header {
+            background-color: #333;
+            padding: 15px;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
         }
         .game-container {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
+            justify-content: center;
+            padding: 80px 20px 20px;
         }
         .game-card {
-            border: 1px solid #ccc;
+            background-color: #333;
             border-radius: 5px;
             padding: 10px;
-            width: 200px;
+            width: 300px;
             cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .game-card:hover {
+            transform: scale(1.05);
         }
         .game-card img {
             width: 100%;
-            height: auto;
+            height: 169px; /* 16:9 aspect ratio */
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        .game-card h2 {
+            margin: 10px 0;
+        }
+        .game-card p {
+            font-weight: bold;
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <h1>Game Selection</h1>
+    <div class="header">
+        <h1>Unblocked Games</h1>
+    </div>
     <div id="game-container" class="game-container"></div>
 
     <script>
@@ -38,23 +65,23 @@
             const gameContainer = document.getElementById('game-container');
             
             try {
-                const response = await fetch('https://api.github.com/repos/githubmaster212/game/contents/games');
+                const response = await fetch('https://api.github.com/repos/YOUR_USERNAME/YOUR_REPO/contents/games');
                 const files = await response.json();
                 
                 for (const file of files) {
                     if (file.name.endsWith('.txt')) {
                         const gameData = await fetch(file.download_url).then(res => res.text());
-                        const [title, description, imageUrl] = gameData.split('\n');
+                        const [title, description, imageUrl, gameUrl] = gameData.split('\n');
                         
                         const gameCard = document.createElement('div');
                         gameCard.className = 'game-card';
                         gameCard.innerHTML = `
-                            <h2>${title}</h2>
                             <img src="${imageUrl}" alt="${title}">
+                            <h2>${title}</h2>
                             <p>${description}</p>
                         `;
                         gameCard.addEventListener('click', () => {
-                            window.open('https://example.com', '_blank');
+                            window.open(gameUrl, '_blank');
                         });
                         
                         gameContainer.appendChild(gameCard);
