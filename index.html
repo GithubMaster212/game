@@ -4,18 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unblocked Games</title>
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2991/2991644.png" type="image/png">
     <style>
         body {
-            background-color: #333;
+            background-color: #222; /* Darker gray background */
             color: white;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
         .top-bar {
-            background-color: #444;
+            background-color: #333; /* Darker gray for the top bar */
             color: white;
             padding: 10px;
             text-align: center;
@@ -29,15 +28,16 @@
             justify-content: center;
             gap: 20px;
             padding: 20px;
-            max-width: 100%;
+            max-width: 1200px; /* Limit max width to prevent overflow */
+            margin: 0 auto; /* Center the container */
         }
         .game-card {
-            background-color: #555;
+            background-color: #444; /* Darker gray for card background */
             border-radius: 5px;
             padding: 10px;
-            width: calc(25% - 20px);
-            max-width: 300px;
+            width: calc(25% - 20px); /* Four cards per row */
             cursor: pointer;
+            box-sizing: border-box;
         }
         .game-card img {
             width: 100%;
@@ -49,19 +49,19 @@
 
         @media (max-width: 1200px) {
             .game-card {
-                width: calc(33.33% - 20px);
+                width: calc(33.33% - 20px); /* Three cards per row */
             }
         }
 
         @media (max-width: 900px) {
             .game-card {
-                width: calc(50% - 20px);
+                width: calc(50% - 20px); /* Two cards per row */
             }
         }
 
         @media (max-width: 600px) {
             .game-card {
-                width: calc(100% - 20px);
+                width: calc(100% - 20px); /* One card per row */
             }
         }
     </style>
