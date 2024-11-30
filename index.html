@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unblocked Games</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2991/2991644.png" type="image/png">
     <style>
         body {
-            background-color: #333; /* Darker gray background */
+            background-color: #333;
             color: white;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
         .top-bar {
-            background-color: #444; /* Dark gray for the top bar */
+            background-color: #444;
             color: white;
             padding: 10px;
             text-align: center;
@@ -24,33 +26,42 @@
         .game-container {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
             gap: 20px;
             padding: 20px;
+            max-width: 100%;
         }
         .game-card {
-            background-color: #555; /* Darker gray for card background */
+            background-color: #555;
             border-radius: 5px;
             padding: 10px;
-            width: calc(16.66% - 20px); /* Adjusted width for six cards per row */
+            width: calc(25% - 20px);
+            max-width: 300px;
             cursor: pointer;
         }
         .game-card img {
             width: 100%;
-            height: auto; /* Maintain aspect ratio */
+            height: auto;
         }
         .game-card p {
-            font-weight: bold; /* Bold description */
+            font-weight: bold;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
             .game-card {
-                width: calc(50% - 20px); /* Two cards per row on smaller screens */
+                width: calc(33.33% - 20px);
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 900px) {
             .game-card {
-                width: calc(100% - 20px); /* One card per row on very small screens */
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .game-card {
+                width: calc(100% - 20px);
             }
         }
     </style>
@@ -60,38 +71,7 @@
     <div id="game-container" class="game-container"></div>
 
     <script>
-        async function loadGames() {
-            const gameContainer = document.getElementById('game-container');
-            
-            try {
-                const response = await fetch('https://api.github.com/repos/githubmaster212/game/contents/games');
-                const files = await response.json();
-                
-                for (const file of files) {
-                    if (file.name.endsWith('.txt')) {
-                        const gameData = await fetch(file.download_url).then(res => res.text());
-                        const [title, description, imageUrl, gameUrl] = gameData.split('\n');
-                        
-                        const gameCard = document.createElement('div');
-                        gameCard.className = 'game-card';
-                        gameCard.innerHTML = `
-                            <h2>${title}</h2>
-                            <img src="${imageUrl}" alt="${title}">
-                            <p>${description}</p>
-                        `;
-                        gameCard.addEventListener('click', () => {
-                            window.open(gameUrl, '_blank');
-                        });
-                        
-                        gameContainer.appendChild(gameCard);
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading games:', error);
-            }
-        }
-
-        loadGames();
+        // Your existing JavaScript code here
     </script>
 </body>
 </html>
