@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .game-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 200px;
+            cursor: pointer;
+        }
+        .game-card img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Selection</h1>
+    <div id="game-container" class="game-container"></div>
+
+    <script>
+        async function loadGames() {
+            try {
+                const response = await fetch('games/');
+                const files = await response.text();
+                const gameFiles = files.match(/href="([^"]+\.txt)"/g);
+
+                if (gameFiles) {
+                    const gameContainer = document.getElementById('game-container');
+                    for (const file of gameFiles) {
+                        const gameName = file.match(/"([^"]+)"/)[1];
+                        const gameData = await fetch(`games/${gameName}`).then(res => res.text());
+                        const [title, description, imageUrl] = gameData.split('\n');
+
+                        const gameCard = document.createElement('div');
+                        gameCard.className = 'game-card';
+                        gameCard.innerHTML = `
+                            <h2>${title}</h2>
+                            <img src="${imageUrl}" alt="${title}">
+                            <p>${description}</p>
+                        `;
+                        gameCard.addEventListener('click', () => {
+                            window.open('https://example.com', '_blank');
+                        });
+                        gameContainer.appendChild(gameCard);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading games:', error);
+            }
+        }
+
+        loadGames();
+    </script>
+</body>
+</html>
