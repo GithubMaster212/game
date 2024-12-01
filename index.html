@@ -6,15 +6,15 @@
     <title>Unblocked Games</title>
     <style>
         body {
-            background-color: #111; /* Dark background */
+            background-color: #111;
             color: white;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-x: hidden;
         }
         .top-bar {
-            background-color: #222; /* Dark gray for the top bar */
+            background-color: #222;
             color: white;
             padding: 10px;
             text-align: center;
@@ -33,38 +33,51 @@
         .game-row {
             display: flex;
             align-items: center;
-            padding: 0 60px; /* Increased padding for the row */
+            padding: 0 60px;
         }
         .game-container {
             display: flex;
-            overflow-x: hidden; 
-            scroll-behavior: smooth; 
-            padding: 10px 0; /* Padding for the container */
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            padding: 10px 0;
         }
         .game-card {
-            background-color: #333; /* Darker gray for card background */
-            border-radius: 10px; /* Rounded corners for cards */
-            padding: 20px; /* Increased padding for larger cards */
-            width: 240px; /* Increased width for larger cards */
-            margin-right: 20px; /* Space between cards */
-            flex-shrink: 0; /* Prevent shrinking */
-            cursor: pointer; 
+            background-color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            width: 240px;
+            margin-right: 20px;
+            flex-shrink: 0;
+            cursor: pointer;
         }
         .game-card img {
-            width: 100%; 
-            height: auto; 
+            width: 100%;
+            height: auto;
+        }
+        .game-card h3 {
+            font-size: 18px;
+            margin: 10px 0 5px;
+        }
+        .game-card p {
+            font-size: 14px;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
         .scroll-arrow {
-            background-color: #444; /* Lighter gray for arrows */
-            color: white; 
-            border-radius: 10px; /* Rounded corners for arrows */
-            border: none; 
-            font-size: 24px; 
-            padding: 15px; /* Increased padding for larger buttons */
-            cursor: pointer; 
-            z-index: 100; 
-            margin-left: 20px; /* Space between arrow and container */
-            margin-right: 20px; /* Space between arrow and container */
+            background-color: #444;
+            color: white;
+            border-radius: 10px;
+            border: none;
+            font-size: 24px;
+            padding: 15px;
+            cursor: pointer;
+            z-index: 100;
+            margin-left: 20px;
+            margin-right: 20px;
         }
     </style>
 </head>
@@ -94,8 +107,8 @@
                             gamesByCategory[category] = [];
                         }
                         const gameData = await fetch(file.download_url).then(res => res.text());
-                        const [title, , imageUrl, gameUrl] = gameData.split('\n'); // Removed description
-                        gamesByCategory[category].push({title, imageUrl, gameUrl});
+                        const [title, description, imageUrl, gameUrl] = gameData.split('\n');
+                        gamesByCategory[category].push({title, description, imageUrl, gameUrl});
                     }
                 }
 
@@ -111,7 +124,8 @@
                                 ${games.map(game => `
                                     <div class="game-card" onclick="window.open('${game.gameUrl}', '_blank')">
                                         <img src="${game.imageUrl}" alt="${game.title}">
-                                        <p>${game.title}</p> <!-- Title remains -->
+                                        <h3>${game.title}</h3>
+                                        <p>${game.description}</p>
                                     </div>
                                 `).join('')}
                             </div>
@@ -127,7 +141,7 @@
 
         function scroll(category, direction) {
             const container = document.getElementById(`game-container-${category}`);
-            container.scrollBy({left: direction * 250, behavior: 'smooth'}); // Adjust scroll amount
+            container.scrollBy({left: direction * 250, behavior: 'smooth'});
         }
 
         loadGames();
