@@ -28,25 +28,31 @@
             margin: 20px 0; /* Space between categories */
         }
         .category-title {
-            margin-left: 100px; /* Increased space for category title */
+            margin-left: 120px; /* Increased space for category title */
             font-size: 24px; /* Font size for category title */
         }
         .game-row {
             display: flex;
             align-items: center;
-            padding: 0 60px; /* Padding for the row */
+            padding: 0 20px; /* Padding for the row */
         }
         .game-container {
             display: flex;
+            overflow-x: auto; /* Allow horizontal scrolling */
             scroll-behavior: smooth; /* Smooth scrolling */
             padding: 10px 0; /* Padding for the container */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer and Edge */
+        }
+        .game-container::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
         }
         .game-card {
             background-color: #333; /* Darker gray for card background */
             border-radius: 10px; /* Rounded corners for cards */
-            padding: 20px; /* Padding for cards */
-            width: 240px; /* Width of cards */
-            margin-right: 20px; /* Space between cards */
+            padding: 15px; /* Padding for cards */
+            width: 200px; /* Width of cards */
+            margin-right: 15px; /* Space between cards */
             flex-shrink: 0; /* Prevent shrinking */
             cursor: pointer; 
         }
@@ -55,11 +61,11 @@
             height: auto; 
         }
         .game-card h3 {
-            font-size: 18px; /* Font size for title */
+            font-size: 16px; /* Font size for title */
             margin: 10px 0 5px; 
         }
         .game-card p {
-            font-size: 14px; /* Font size for description */
+            font-size: 12px; /* Font size for description */
             margin: 0; 
             overflow: hidden;
             text-overflow: ellipsis;
@@ -68,16 +74,35 @@
             -webkit-box-orient: vertical; 
         }
         .scroll-arrow {
-            background-color: #444; /* Lighter gray for arrows */
+            background-color: rgba(68, 68, 68, 0.8); /* Lighter gray for arrows */
             color: white; 
-            border-radius: 10px; /* Rounded corners for arrows */
+            border-radius: 50%; /* Round arrows */
             border: none; 
-            font-size: 24px; 
-            padding: 15px; 
+            font-size: 20px; 
+            padding: 10px; 
             cursor: pointer; 
             z-index: 100; 
-            margin-left: 20px; /* Space between arrow and container */
-            margin-right: 20px; /* Space between arrow and container */
+            margin-left: 5px; /* Space between arrow and container */
+        }
+        @media (max-width: 768px) {
+            .category-title {
+                margin-left: 20px; /* Adjusted space for smaller screens */
+                font-size: 20px;
+            }
+            .game-row {
+                padding: 0 10px;
+            }
+            .game-card {
+                width: 150px;
+                padding: 10px;
+                margin-right: 10px;
+            }
+            .scroll-arrow {
+                font-size: 16px;
+                padding: 8px;
+                margin-left: 5px;
+                margin-right: 5px;
+            }
         }
     </style>
 </head>
@@ -108,7 +133,7 @@
                       const row = rowPriority[0];
                       const priority = rowPriority[1];
 
-                      // Only add games to the respective categories based on their row number
+                      // Only add games to respective categories based on their row number
                       if (gamesByCategory[row]) {
                           const gameData = await fetch(file.download_url).then(res => res.text());
                           const [title, description, imageUrl, gameUrl] = gameData.split('\n');
@@ -147,7 +172,7 @@
 
       function scroll(rowId, direction) {
           const container = document.getElementById(`game-container-${rowId}`);
-          container.scrollBy({ left: direction * 250, behavior: 'smooth' });
+          container.scrollBy({ left: direction * 200, behavior: 'smooth' });
       }
 
       loadGames();
