@@ -36,8 +36,8 @@
             border-radius: 5px;
             padding: 10px;
             width: calc(25% - 20px); /* Four cards per row */
+            min-width: 200px; /* Minimum width for smaller screens */
             cursor: pointer;
-            box-sizing: border-box;
         }
         .game-card img {
             width: 100%;
@@ -47,21 +47,21 @@
             font-weight: bold;
         }
 
-        @media (max-width: 1200px) {
+        @media (max-width: 992px) {
             .game-card {
                 width: calc(33.33% - 20px); /* Three cards per row */
             }
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
             .game-card {
                 width: calc(50% - 20px); /* Two cards per row */
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 480px) {
             .game-card {
-                width: calc(100% - 20px); /* One card per row */
+                width: 100%; /* One card per row */
             }
         }
     </style>
@@ -71,7 +71,38 @@
     <div id="game-container" class="game-container"></div>
 
     <script>
-        // Your existing JavaScript code here
+        async function loadGames() {
+            const gameContainer = document.getElementById('game-container');
+            
+            try {
+                const response = await fetch('https://api.github.com/repos/githubmaster212/game/contents/games');
+                const files = await response.json();
+                
+                for (const file of files) {
+                    if (file.name.endsWith('.txt')) {
+                        const gameData = await fetch(file.download_url).then(res => res.text());
+                        const [title, description, imageUrl, gameUrl] = gameData.split('\n');
+                        
+                        const gameCard = document.createElement('div');
+                        gameCard.className = 'game-card';
+                        gameCard.innerHTML = `
+                            <h2>${title}</h2>
+                            <img src="${imageUrl}" alt="${title}">
+                            <p>${description}</p>
+                        `;
+                        gameCard.addEventListener('click', () => {
+                            window.open(gameUrl, '_blank');
+                        });
+                        
+                        gameContainer.appendChild(gameCard);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading games:', error);
+            }
+        }
+
+        loadGames();
     </script>
 </body>
 </html>
