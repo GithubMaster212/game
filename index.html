@@ -54,11 +54,6 @@
             width: 100%; 
             height: auto; 
         }
-        .game-card p {
-            font-weight: bold; 
-            font-size: 16px; /* Increased font size for better readability */
-            margin-top: 5px; 
-        }
         .scroll-arrow {
             background-color: #444; /* Lighter gray for arrows */
             color: white; 
@@ -99,8 +94,8 @@
                             gamesByCategory[category] = [];
                         }
                         const gameData = await fetch(file.download_url).then(res => res.text());
-                        const [title, description, imageUrl, gameUrl] = gameData.split('\n');
-                        gamesByCategory[category].push({title, description, imageUrl, gameUrl});
+                        const [title, , imageUrl, gameUrl] = gameData.split('\n'); // Removed description
+                        gamesByCategory[category].push({title, imageUrl, gameUrl});
                     }
                 }
 
@@ -116,7 +111,7 @@
                                 ${games.map(game => `
                                     <div class="game-card" onclick="window.open('${game.gameUrl}', '_blank')">
                                         <img src="${game.imageUrl}" alt="${game.title}">
-                                        <p>${game.title}</p>
+                                        <p>${game.title}</p> <!-- Title remains -->
                                     </div>
                                 `).join('')}
                             </div>
