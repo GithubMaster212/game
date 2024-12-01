@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unblocked Games</title>
+    <title>Unblocked Games 68</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2991/2991644.png" type="image/png">
     <style>
         body {
             background-color: #111;
@@ -26,18 +27,14 @@
         .category-container {
             margin: 20px 0;
         }
-        .category-title {
-            margin-left: 60px;
-            font-size: 24px;
-        }
         .game-row {
             display: flex;
             align-items: center;
             padding: 0 60px;
+            overflow-x: hidden;
         }
         .game-container {
             display: flex;
-            overflow-x: hidden;
             scroll-behavior: smooth;
             padding: 10px 0;
         }
@@ -82,15 +79,10 @@
     </style>
 </head>
 <body>
-    <div class="top-bar">Unblocked Games</div>
+    <div class="top-bar">Unblocked Games 68</div>
     <div id="categories-container"></div>
 
     <script>
-        const categories = {
-            '1': 'Featured',
-            '2': '2 Player'
-        };
-
         async function loadGames() {
             const categoriesContainer = document.getElementById('categories-container');
             
@@ -98,29 +90,32 @@
                 const response = await fetch('https://api.github.com/repos/githubmaster212/game/contents/games');
                 const files = await response.json();
                 
-                const gamesByCategory = {};
+                const gamesByRow = {};
 
                 for (const file of files) {
                     if (file.name.endsWith('.txt')) {
-                        const category = file.name[0];
-                        if (!gamesByCategory[category]) {
-                            gamesByCategory[category] = [];
+                        const [rowPriority, gameName] = file.name.split('_');
+                        const row = rowPriority[0];
+                        const priority = rowPriority[1];
+                        
+                        if (!gamesByRow[row]) {
+                            gamesByRow[row] = [];
                         }
+                        
                         const gameData = await fetch(file.download_url).then(res => res.text());
                         const [title, description, imageUrl, gameUrl] = gameData.split('\n');
-                        gamesByCategory[category].push({title, description, imageUrl, gameUrl});
+                        gamesByRow[row].push({title, description, imageUrl, gameUrl, priority});
                     }
                 }
 
-                Object.keys(categories).forEach(category => {
-                    const games = gamesByCategory[category] || [];
+                Object.keys(gamesByRow).sort().forEach(row => {
+                    const games = gamesByRow[row].sort((a, b) => a.priority - b.priority);
                     const categoryContainer = document.createElement('div');
                     categoryContainer.className = 'category-container';
                     categoryContainer.innerHTML = `
-                        <h2 class="category-title">${categories[category]}</h2>
                         <div class="game-row">
-                            <button class="scroll-arrow" onclick="scroll('${category}', -1)">&#9664;</button>
-                            <div id="game-container-${category}" class="game-container">
+                            <button class="scroll-arrow" onclick="scroll('row-${row}', -1)">&#9664;</button>
+                            <div id="game-container-row-${row}" class="game-container">
                                 ${games.map(game => `
                                     <div class="game-card" onclick="window.open('${game.gameUrl}', '_blank')">
                                         <img src="${game.imageUrl}" alt="${game.title}">
@@ -129,7 +124,7 @@
                                     </div>
                                 `).join('')}
                             </div>
-                            <button class="scroll-arrow" onclick="scroll('${category}', 1)">&#9654;</button>
+                            <button class="scroll-arrow" onclick="scroll('row-${row}', 1)">&#9654;</button>
                         </div>
                     `;
                     categoriesContainer.appendChild(categoryContainer);
@@ -139,8 +134,8 @@
             }
         }
 
-        function scroll(category, direction) {
-            const container = document.getElementById(`game-container-${category}`);
+        function scroll(rowId, direction) {
+            const container = document.getElementById(`game-container-${rowId}`);
             container.scrollBy({left: direction * 250, behavior: 'smooth'});
         }
 
