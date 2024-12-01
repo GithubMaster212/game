@@ -6,7 +6,7 @@
     <title>Unblocked Games</title>
     <style>
         body {
-            background-color: #111;
+            background-color: #222;
             color: white;
             font-family: Arial, sans-serif;
             margin: 0;
@@ -14,7 +14,7 @@
             overflow-x: hidden;
         }
         .top-bar {
-            background-color: #222;
+            background-color: #333;
             color: white;
             padding: 10px;
             text-align: center;
@@ -23,26 +23,25 @@
             width: 100%;
             z-index: 1000;
         }
-        .category {
-            margin: 20px 0;
-            position: relative;
+        .category-container {
+            margin: 20px 40px;
         }
         .category-title {
-            margin-left: 20px;
+            font-size: 24px;
+            margin-bottom: 10px;
         }
         .game-row {
             display: flex;
             overflow-x: hidden;
-            scroll-behavior: smooth;
-            padding: 10px 0;
+            position: relative;
         }
         .game-card {
-            background-color: #333;
+            background-color: #444;
             border-radius: 5px;
             padding: 10px;
             width: 180px;
-            flex: 0 0 auto;
             margin-right: 15px;
+            flex-shrink: 0;
             cursor: pointer;
         }
         .game-card img {
@@ -51,8 +50,7 @@
         }
         .game-card p {
             font-weight: bold;
-            font-size: 0.9em;
-            margin: 5px 0;
+            font-size: 14px;
         }
         .scroll-arrow {
             position: absolute;
@@ -60,13 +58,16 @@
             transform: translateY(-50%);
             background-color: rgba(0,0,0,0.5);
             color: white;
-            border: none;
-            font-size: 24px;
             padding: 10px;
             cursor: pointer;
+            z-index: 100;
         }
-        .scroll-left { left: 0; }
-        .scroll-right { right: 0; }
+        .scroll-left {
+            left: 0;
+        }
+        .scroll-right {
+            right: 0;
+        }
     </style>
 </head>
 <body>
@@ -74,10 +75,11 @@
     <div id="categories-container"></div>
 
     <script>
-        const categories = {
-            '1': 'Featured',
-            '2': '2 Player'
-        };
+        const categories = [
+            { id: 1, name: "Featured" },
+            { id: 2, name: "2 Player" },
+            // Add more categories as needed
+        ];
 
         async function loadGames() {
             const categoriesContainer = document.getElementById('categories-container');
@@ -90,55 +92,55 @@
 
                 for (const file of files) {
                     if (file.name.endsWith('.txt')) {
-                        const category = file.name[0];
-                        if (!gamesByCategory[category]) {
-                            gamesByCategory[category] = [];
+                        const categoryId = parseInt(file.name[0]);
+                        if (!gamesByCategory[categoryId]) {
+                            gamesByCategory[categoryId] = [];
                         }
-                        gamesByCategory[category].push(file);
+                        
+                        const gameData = await fetch(file.download_url).then(res => res.text());
+                        const [title, description, imageUrl, gameUrl] = gameData.split('\n');
+                        
+                        gamesByCategory[categoryId].push({ title, description, imageUrl, gameUrl });
                     }
                 }
 
-                for (const [category, games] of Object.entries(gamesByCategory)) {
-                    const categoryDiv = document.createElement('div');
-                    categoryDiv.className = 'category';
-                    categoryDiv.innerHTML = `
-                        <h2 class="category-title">${categories[category] || `Category ${category}`}</h2>
-                        <div class="game-row" id="category-${category}">
-                            ${games.map(file => `<div class="game-card" data-file="${file.download_url}"></div>`).join('')}
+                categories.forEach(category => {
+                    const categoryContainer = document.createElement('div');
+                    categoryContainer.className = 'category-container';
+                    categoryContainer.innerHTML = `
+                        <h2 class="category-title">${category.name}</h2>
+                        <div class="game-row" id="category-${category.id}">
+                            <div class="scroll-arrow scroll-left" onclick="scroll('category-${category.id}', -200)">❮</div>
+                            <div class="scroll-arrow scroll-right" onclick="scroll('category-${category.id}', 200)">❯</div>
                         </div>
-                        <button class="scroll-arrow scroll-left" onclick="scroll('category-${category}', -200)">❮</button>
-                        <button class="scroll-arrow scroll-right" onclick="scroll('category-${category}', 200)">❯</button>
                     `;
-                    categoriesContainer.appendChild(categoryDiv);
 
-                    games.forEach(file => loadGameData(file.download_url));
-                }
+                    const gameRow = categoryContainer.querySelector('.game-row');
+                    
+                    (gamesByCategory[category.id] || []).forEach(game => {
+                        const gameCard = document.createElement('div');
+                        gameCard.className = 'game-card';
+                        gameCard.innerHTML = `
+                            <img src="${game.imageUrl}" alt="${game.title}">
+                            <p>${game.title}</p>
+                        `;
+                        gameCard.addEventListener('click', () => {
+                            window.open(game.gameUrl, '_blank');
+                        });
+                        
+                        gameRow.appendChild(gameCard);
+                    });
+
+                    categoriesContainer.appendChild(categoryContainer);
+                });
             } catch (error) {
                 console.error('Error loading games:', error);
             }
         }
 
-        async function loadGameData(fileUrl) {
-            try {
-                const gameData = await fetch(fileUrl).then(res => res.text());
-                const [title, description, imageUrl, gameUrl] = gameData.split('\n');
-                
-                const gameCard = document.querySelector(`[data-file="${fileUrl}"]`);
-                gameCard.innerHTML = `
-                    <img src="${imageUrl}" alt="${title}">
-                    <p>${title}</p>
-                `;
-                gameCard.addEventListener('click', () => {
-                    window.open(gameUrl, '_blank');
-                });
-            } catch (error) {
-                console.error('Error loading game data:', error);
-            }
-        }
-
-        function scroll(id, amount) {
-            const row = document.getElementById(id);
-            row.scrollLeft += amount;
+        function scroll(categoryId, amount) {
+            const row = document.getElementById(categoryId);
+            row.scrollBy({ left: amount, behavior: 'smooth' });
         }
 
         loadGames();
